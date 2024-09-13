@@ -1,0 +1,222 @@
+/* #55ACEE #292F33 #66757F #CCD6DD #E1E8ED #FFFFFF */
+@font-face {
+  font-family: 'Shabnam';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../public/fonts/Shabnam.eot);
+  src: url(../public/fonts/Shabnam.ttf)
+      url(../public/fonts/Shabnam.woff)
+      url(../public/fonts/Shabnam.woff2);
+}
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: light dark;
+  color: #E1E8ED;
+  background-color: #66757F;
+  
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #292F33; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFFFFF; 
+}
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.f-Shabnam{
+  font-family: Shabnam;
+}
+
+body{
+  width: 100%;
+  height: 100%;
+  background-color: #66757F !important;
+}
+
+html{
+  width: 100%;
+  height: 100%;
+}
+
+.w-80{
+  width: 80%;
+}
+
+.css-1n0hj84-new {
+  padding-right: .7rem !important;
+}
+
+.j_c{
+justify-content: flex-start !important;
+}
+
+.pos-fix{
+  position: fixed;
+}
+
+#root{
+  margin: 0;
+  padding: 0;
+}
+
+.bg-55ACEE{
+  background-color: #55ACEE;
+}
+
+.pointer-notAllow {
+  cursor: not-allowed;
+}
+
+.inputVal:invalid{
+  background-color: rgb(230, 161, 161);
+}
+
+
+
+.top-200{
+  position: relative;
+  top: 100px;
+}
+
+.f-jc-Sa{
+  justify-content: space-around;
+}
+
+.bg-292F33{
+  background-color: #292F33;
+}
+
+.c-292F33{
+  color: #292F33;
+}
+
+.pointer {cursor: pointer;}
+
+.c-55ACEE{
+  color: #55ACEE;
+}
+
+.overflow-hidden{
+  overflow: hidden;
+}
+
+
+
+.bor-b{
+  border-bottom: #292F33 solid 2px ;
+}
+.p-l-4p{
+  padding-left: 10px;
+}
+.Fs-25{
+  font-size: 25px;
+}
+
+.Fs-20{
+  font-size: 20px;
+}
+
+.no-bg{
+  background-color: transparent;
+}
+
+.m-8p{
+  margin: 8px;
+}
+
+
+.br-20p{
+  border-radius: 100px;
+}
+
+.bg-66757F{
+  background-color: #66757F;
+}
+
+.bg-CCD6DD{
+  background-color: #CCD6DD !important;
+}
+
+div{
+  color: #FFFFFF ;
+}
+
+.bg-E1E8ED{
+  background-color: #E1E8ED;
+}
+
+.css-1oxhx2p{
+  justify-content: space-around ;
+}
+
+.bg-FFFFFF{
+  background-color: #ffffff;
+}
+
+.c-FFFFFF{
+  color: #FFFFFF;
+}
+
+.no-b{
+  border: none;
+}
+
+.des-rtl{
+  direction:rtl;
+}
+
+.p-t-3p{
+  padding-top: 10px;
+}
+
+.des-ltr{
+  direction:ltr;
+}
+
+
+.flex{
+  display: flex;
+}
+
+.fd-rowR{
+  flex-direction: row-reverse;
+}
+
+.al-it-c{
+  align-items: center;
+}
+
+.w-100{
+  width: 100%;
+}
+
+.h-40p{
+  height: 40px;
+}
+
+.h-20{
+  height: 30px;
+}
+
+.w-30{
+  width: 40%;
+}
+
+.h-100{
+  height: 100%;
+}
+
+.Toast{
+  z-index: 100;
+}
