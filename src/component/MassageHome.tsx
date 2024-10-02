@@ -26,7 +26,6 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    useToast
 } from '@chakra-ui/react'
 import {DeleteIcon,HamburgerIcon,ArrowUpIcon,ExternalLinkIcon,EditIcon} from '@chakra-ui/icons'
 import {useRef, useState} from 'react';
@@ -75,11 +74,11 @@ type ChatList ={
     id: number
   }
 
-
+async function callApi<Output>(patch:'chat',method:'GET',token:string,body:undefined):Promise<Output|null>;
 async function callApi<Output>(patch:'chat',method:'POST',token:string,body?:{[key:string]:string}):Promise<Output|null>;
 async function callApi<Output>(patch:'chat',method:'PUT',token:string,body?:{[key:string]:string}):Promise<Output|null>;
 async function callApi<Output>(patch:'chat',method:'DELETE',token:string,body?:{[key:string]:string}):Promise<Output|null>;
-async function callApi<Output>(patch:'chat',method:'POST'|'PUT'|'DELETE',token:string,body?:{[key:string]:string}){
+async function callApi<Output>(patch:'chat',method:'GET'|'POST'|'PUT'|'DELETE',token:string,body?:{[key:string]:string}){
     try{
         
         let response =await fetch(`https://farawin.iran.liara.run/api/${patch}`,{
@@ -94,12 +93,19 @@ async function callApi<Output>(patch:'chat',method:'POST'|'PUT'|'DELETE',token:s
     }
 }
 
+const getAllChats = async (token:string)=>{
+    const responseGetChat = await callApi<responseApi&{chatList:ChatList[]}>('chat','GET',token,undefined);
+    if(responseGetChat?.code=='200'){
+        const {chatList} = responseGetChat;
+        return chatList
+    }
+  }
 
-const MassageHome = (props:{contactInfo:Contact|undefined,token:string,allListChat:Promise<ChatList[]|undefined>}) => {
+const MassageHome = (props:{contactInfo:Contact|undefined,token:string}) => {
     const { isOpen:isEditOpen, onOpen:onEditOpen, onClose:onEditClose } = useDisclosure()
     const { isOpen:isDeleteOpne, onOpen:onDeleteOpen, onClose:onDeleteClose } = useDisclosure()
-    const initialRefEdit = useRef(null)
-    const toast = useToast();
+    let allListChat = getAllChats(props.token);
+    const initialRefEdit = useRef(null);
     const dateNow = new Date();
 
     const [textChat,setTextChat]=useState('');
@@ -111,12 +117,7 @@ const MassageHome = (props:{contactInfo:Contact|undefined,token:string,allListCh
     const handlerSendMessage =async ()=>{
        const responsePostChat=await callApi<responseApi&{chat:Chat}>('chat','POST',props.token,{contactUsername:props.contactInfo!.username,textHtml:textChat});
        if(responsePostChat?.code=='200'){
-        toast({
-            position: 'bottom',
-            title: `پیام با موفقیت ارسال شد`,
-            status: 'success',
-            isClosable: true,
-          });
+        allListChat = getAllChats(props.token);
        }
        else{
        }
@@ -141,10 +142,11 @@ const MassageHome = (props:{contactInfo:Contact|undefined,token:string,allListCh
         const day = dateNow.getDate()
         return `${mounths[mounth]} ${day}`
      }
+          
 
     return <div className='w-100'>
-        <Card  p={0}  w={'100%'}>
-                <CardBody bg={'#66757F'} p={'14px'} boxShadow={'-2px -2px 6px #55ACEE inset'}>
+        <Card zIndex={'100'}  p={0}  w={'100%'}>
+                <CardBody  bg={'#66757F'} p={'14px'} boxShadow={'-2px -2px 6px #55ACEE inset'}>
                 <Box display={'flex'} flexDirection={'column'}>
                     <Box display={'flex'} flexDirection={'row-reverse'} justifyContent={'space-between'} >
                     <Box display={'flex'} flexDirection={'row-reverse'}> 
@@ -173,14 +175,14 @@ const MassageHome = (props:{contactInfo:Contact|undefined,token:string,allListCh
                             _hover={{background:'#55ACEE'}}
                             _active={{}}
                         />
-                        <MenuList bg={'transparent'} border={0}>
-                            <MenuItem bg={'#55ACEE'} className='no-b pointer' _hover={{background:'#CCD6DD',color:'#55ACEE'}} borderRadius={'10px 10px 0 0'} fontSize={15} onClick={onDeleteOpen} icon={<DeleteIcon/>} >
+                        <MenuList bg={'#292F33'} border={'2px solid #66757F'}>
+                            <MenuItem bg={'transparent'} className='no-b pointer' _hover={{color:'#55ACEE'}} borderRadius={'10px 10px 0 0'} fontSize={15} onClick={onDeleteOpen} icon={<DeleteIcon/>} >
                             حذف مخاطب
                             </MenuItem>
-                            <MenuItem bg={'#55ACEE'} className='no-b pointer' _hover={{background:'#CCD6DD',color:'#55ACEE'}} fontSize={15}  onClick={onEditOpen} icon={<EditIcon />}>
+                            <MenuItem bg={'transparent'} className='no-b pointer' _hover={{color:'#55ACEE'}} fontSize={15}  onClick={onEditOpen} icon={<EditIcon />}>
                             ویرایش مخاطب
                             </MenuItem>
-                            <MenuItem bg={'#55ACEE'} className='no-b pointer' _hover={{background:'#CCD6DD',color:'#55ACEE'}} fontSize={15} borderRadius={'0 0 10px 10px'}  icon={<ExternalLinkIcon />} >
+                            <MenuItem bg={'transparent'} className='no-b pointer' _hover={{color:'#55ACEE'}} fontSize={15} borderRadius={'0 0 10px 10px'}  icon={<ExternalLinkIcon />} >
                             خروج از چت
                             </MenuItem>
                         </MenuList>
@@ -242,10 +244,11 @@ const MassageHome = (props:{contactInfo:Contact|undefined,token:string,allListCh
             </Card>
             <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} bg={'#292F33'} boxShadow={'2px 2px 1px #55ACEE inset,-2px -2px 1px #55ACEE inset'} h={610}>
                 {showTime()}
-                <MessageShow allListChat={props.allListChat} contactInfo={props.contactInfo}/>
-                <Stack  spacing={3}  >
-            <InputGroup top={-10} right={3} flexDirection={'row-reverse'} justifyContent={'center'} size='md' className='h-40p' >
+                <MessageShow allListChat={allListChat} contactInfo={props.contactInfo}/>
+                <Stack zIndex={'10'} spacing={3}  >
+            <InputGroup m={'10px 0 15px 0'} flexDirection={'row-reverse'} justifyContent={'center'} size='md' className='h-40p' >
             <Input
+                id='textChat'
                 borderRadius={'0 20px 20px 0'}
                 w={'90%'}
                 className='css-1n0hj84-new no-b h-100 bg-E1E8ED des-rtl c-292F33 Fs-20'

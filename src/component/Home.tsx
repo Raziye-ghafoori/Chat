@@ -71,7 +71,7 @@ const Home = (props:{token:string,username:string}) => {
         }
     }
 
-    const messageHome = <MassageHome contactInfo={chatInfo} token={props.token} allListChat={allListChat} />;
+    const messageHome = <MassageHome  contactInfo={chatInfo} token={props.token} />;
 
     return <div  className='flex fd-rowR al-it-c'>
         <SearchBar  token={props.token} contactlist={contactList} username={props.username} onCilckGetChatInfo={handlerSetChatInfo} allListChat={allListChat}/>

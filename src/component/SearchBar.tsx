@@ -65,27 +65,20 @@ const SearchBar = (props:{token:string,contactlist:Promise<Contact[]|undefined>,
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [listSearch, setListSearch] = useState<Contact[]>([]);
     const [listShow,setListShow] = useState<JSX.Element[]>([]);
-    
+
 
     const handlerInput =(event:any)=>{
         SetNameSearch(event.target.value);
     }
 
     const handleSearch = () => {
+        setListSearch([]);
         contacts.forEach(contact=>{
             if(contact.name.includes(nameSearch)){
-                setListSearch(prevState => [...prevState,contact])
+                setListSearch(prevStateSearch => [...prevStateSearch,contact])
             }
         })
-
-        useEffect(() => {
-            const fetchMessages = async () => {
-                const contact = await maping(listSearch)
-                setListShow(contact || []);
-            };
-            fetchMessages();
-        }, [props.allListChat]);
-         
+        
     };
 
     const handlerSetName = (event:any)=>{
@@ -106,7 +99,9 @@ const SearchBar = (props:{token:string,contactlist:Promise<Contact[]|undefined>,
                 return el.username == numberContact && el.name == nameContact && props.username == el.ref
             })
             if(contact){
-                setContacts(prevState => [...prevState, contact]);
+                if (!contacts.includes(contact)) {
+                    setContacts(prevState => [...prevState, contact]);
+                }
             }else{
                 toast({
                     position: 'bottom',
@@ -131,6 +126,8 @@ const SearchBar = (props:{token:string,contactlist:Promise<Contact[]|undefined>,
         let date:string = '';
         let message:string = 'پیامی وجود ندارد';
         return list.map(contact=>{
+            date='';
+            message = 'پیامی وجود ندارد';
            chatList?.forEach(chat=>{
             if (chat.receiver == contact.username && chat.sender == props.username
                 || 
@@ -140,6 +137,7 @@ const SearchBar = (props:{token:string,contactlist:Promise<Contact[]|undefined>,
                 message= chat.text
             }
            })
+           
             
             return(<Card onClick={()=>handleContactClick(contact)} className='pointer' bg={'transparent'} boxShadow={0} p={1}>
                         <CardBody  borderRadius={'50px'} _hover={{background:'#ffffff1e'}} p={1}>
@@ -155,8 +153,7 @@ const SearchBar = (props:{token:string,contactlist:Promise<Contact[]|undefined>,
                         </Heading>
                         </Box>
                         <Box display={'flex'} flexDirection={'row-reverse'} justifyContent={'space-between'}>
-                
-                        <Text overflow={'hidden'} color={'#E1E8ED'}  fontWeight={'bold'} size='xs' fontSize={12} pt={5} p={5}>
+                        <Text overflow={'hidden'} color={'#E1E8ED'} h={10} fontWeight={'bold'} size='xs' fontSize={12} pt={5} p={5}>
                             {message}
                             </Text>
                             <Text color={'#292F33'} fontWeight={'bold'} size='xs' fontSize={12} pt={5} p={5}>
@@ -178,6 +175,15 @@ const SearchBar = (props:{token:string,contactlist:Promise<Contact[]|undefined>,
         };
         fetchMessages();
     }, [contacts]); 
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            const contact = await maping(listSearch);
+            setListShow(contact || []);
+        };
+        fetchMessages();
+    }, [listSearch]);
+     
 
     return (
         <div className='w-30 p-l-4p p-t-3p' >
@@ -217,12 +223,12 @@ const SearchBar = (props:{token:string,contactlist:Promise<Contact[]|undefined>,
                     <ModalBody pb={6}>
                         <FormControl>
                         <FormLabel className='des-rtl f-Shabnam' fontSize={25}  textAlign={'right'} >نام</FormLabel>
-                        <Input value={nameContact}  onChange={handlerSetName} marginLeft={100} ref={initialRef} borderRadius={20}  placeholder='نام مخاطب'className='des-rtl bg-CCD6DD no-b' color={'#292F33'} w='50%' h={30} />
+                        <Input id='username'  onChange={handlerSetName} marginLeft={100} ref={initialRef} borderRadius={20}  placeholder='نام مخاطب'className='des-rtl bg-CCD6DD no-b' color={'#292F33'} w='50%' h={30} />
                         </FormControl>
 
                         <FormControl mt={4}>
                         <FormLabel className='des-rtl f-Shabnam' textAlign={'right'} fontSize={25}>شماره تلفن</FormLabel>
-                        <Input value={numberContact} onChange={handlerSetNumber} marginLeft={100}  placeholder='تلفن مخاطب' borderRadius={20} className='des-rtl bg-CCD6DD no-b'  w='50%' color={'#292F33'} h={30}/>
+                        <Input id='number' onChange={handlerSetNumber} marginLeft={100}  placeholder='تلفن مخاطب' borderRadius={20} className='des-rtl bg-CCD6DD no-b'  w='50%' color={'#292F33'} h={30}/>
                         </FormControl>
                     </ModalBody>
 
